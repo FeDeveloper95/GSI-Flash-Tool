@@ -7,17 +7,19 @@ pause
 
 echo.
 echo Choose the current state of the device:
-echo   1. Booted in AndroidOS
+echo   1. Booted in Android
 echo   2. Recovery
 echo   3. Bootloader
 echo   4. Fastboot
-echo   5. Quit
+echo   5. Magisk
+echo   6. Quit
 set /p "scelta=Input: "
 
 rem Esci se l'utente sceglie 5
-if "%scelta%"=="5" exit /b 0
+if "%scelta%"=="6" exit /b 0
 
 rem Esegui l'azione in base alla scelta dell'utente
+if "%scelta%"=="5" goto magisk
 if "%scelta%"=="4" goto fastboot
 if "%scelta%"=="3" goto bootloader
 if "%scelta%"=="2" goto recovery
@@ -26,12 +28,12 @@ goto inizio
 
 :avviato
 rem Riavvia in fastboot se il dispositivo è avviato normalmente
-adb reboot bootloader
+adb reboot fastboot
 goto flashing
 
 :recovery
 rem Riavvia in fastboot se il dispositivo è in recovery
-adb reboot bootloader
+adb reboot fastboot
 goto flashing
 
 :bootloader
@@ -41,6 +43,11 @@ goto flashing
 
 :fastboot
 rem Non riavviare se il dispositivo è già in fastboot
+goto flashing
+
+:magisk
+adb sideload magisk.zip
+goto inizio
 
 :flashing
 rem Esegui le operazioni di flashing
